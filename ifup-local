@@ -1,0 +1,40 @@
+#!/bin/bash
+# 
+# This script is just for centos!
+# Just put it on "/sbin/"
+#
+
+#Where ip command is?
+#IP=/sbin/ip
+IP=/usr/sbin/ip
+
+DEVICE=$1
+SCHOOL_GW=10.108.100.1
+SCHOOL_ETH=ens34
+
+PUBLIC_GW=192.168.0.1
+PUBLIC_ETH=ens32
+
+echo "/sbin/ifup-local is running on interface=$DEVICE!"
+
+if [ $DEVICE = "$SCHOOL_ETH" ] ; then
+	#add school network
+	echo "eth=$DEVICE operation raised!"
+	#/sbin/route add -net 10.208.0.0/16 gw $SCHOOL_GW dev $SCHOOL_ETH
+	#/sbin/route add -net 10.108.0.0/16 gw $SCHOOL_GW dev $SCHOOL_ETH
+	$IP route add 10.0.0.0/8 via $SCHOOL_GW
+	$IP route del default via $SCHOOL_GW
+
+elif [ $DEVICE = "$PUBLIC_ETH" ] ; then
+	#add public network
+	echo "eth=$DEVICE operation raised!"
+	#/sbin/route add -net 192.168.0.0/16 gw $PM_GW dev eth0
+	#/sbin/route add -net 10.0.0.0/8 gw $PM_GW dev eth0
+
+elif [ $DEVICE = "eth3" ] ; then
+	#
+	#echo true
+	true	
+fi
+
+

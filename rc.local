@@ -1,0 +1,22 @@
+#!/bin/sh
+
+CMD=$1
+
+if [ -z "$CMD" ]; then
+	CMD=start
+fi
+
+#sleep 5s
+
+echo "$CMD : Haha, date=`date` " >> /home/r203/haha.txt
+
+if [ "$CMD" = "start" ]; then
+	echo "rc.local : $CMD"
+elif [ "$CMD" = "stop" ] ; then
+
+	echo "rc.local : $CMD"
+fi
+
+/opt/goagent_run.sh $CMD
+
+#nohup /usr/bin/python2 /opt/goagent/local/proxy.py > /dev/null 2>&1 &

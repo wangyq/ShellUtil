@@ -1,0 +1,26 @@
+
+#
+# please locate it to "/etc/systemd/system"
+# and then "systemctl enable/restart rc-local.service"
+# You should using "systemctl restart ... " to re-run the script!
+#
+
+[Unit]
+Description=run local script at startup
+ConditionPathExists=/etc/rc.local
+
+Wants=network.target network-online.target
+After=network.target network-online.target
+
+[Service] 
+#Type=forking
+Type=oneshot
+RemainAfterExit=yes
+
+ExecStart=/etc/rc.local
+#ExecStart=/etc/rc.local start
+#ExecStop=/etc/rc.local stop
+
+[Install]
+WantedBy=multi-user.target 
+

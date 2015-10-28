@@ -1,0 +1,50 @@
+
+config dnsmasq
+	option domainneeded '1'
+	option boguspriv '1'
+	option filterwin2k '0'
+	option localise_queries '1'
+	option rebind_protection '1'
+	option rebind_localhost '1'
+	option local '/lan/'
+	option domain 'lan'
+	option expandhosts '1'
+	option nonegcache '0'
+	option authoritative '1'
+	option readethers '1'
+	option leasefile '/tmp/dhcp.leases'
+	option resolvfile '/tmp/resolv.conf.auto'
+
+config dhcp 'lan'
+	option interface 'lan00'
+	option start '30'
+	option limit '160'
+	option leasetime '12h'
+	list dhcp_option '3,192.168.0.1'
+#	option dhcpv6 'server'
+#	option ra 'server'
+
+config dhcp 'wan'
+	option interface 'wan01 wan02'
+	option ignore '1'
+
+config odhcpd 'odhcpd'
+	option maindhcp '0'
+	option leasefile '/tmp/hosts/odhcpd'
+	option leasetrigger '/usr/sbin/odhcpd-update'
+
+config host
+        option ip '192.168.0.199'
+        option mac '94:de:80:6b:ed:2b'
+        option name 'printer-4'
+
+config host
+        option ip '192.168.0.10'
+        option mac 'a0:f3:c1:3f:48:29'
+        option name 'printer-11'
+
+config host
+        option ip '192.168.0.68'
+        option mac '94:DE:80:6B:EA:3C'
+        option name 'wang'
+

@@ -1,0 +1,80 @@
+
+config interface 'loopback'
+	option ifname 'lo'
+	option proto 'static'
+	option ipaddr '127.0.0.1'
+	option netmask '255.0.0.0'
+
+config interface 'lan00'
+	option ifname 'eth0'
+	option proto 'static'
+	option ipaddr '192.168.0.1'
+	option netmask '255.255.255.0'
+#	option ipaddr '192.168.0.3'
+#        option gateway '192.168.0.1'
+#        option dns      '192.168.0.1'
+#	option ip6assign '60'
+	option ip6addr fc00:0101:0101::1/64
+
+config interface 'lan01'
+        option proto 'static'
+        option ifname 'eth0.1'
+        option ipaddr '192.168.1.1'
+        option netmask '255.255.255.0'
+
+config interface 'lan02'
+        option proto 'static'
+        option ifname 'eth0.2'
+        option netmask '255.255.255.0'
+        option ipaddr '192.168.2.101'
+
+config interface 'lan03'
+        option proto 'static'
+        option ifname 'eth0.3'
+        option ipaddr '192.168.3.128'
+        option netmask '255.255.255.0'
+
+config interface 'lan04'
+        option proto 'static'
+        option ifname 'eth0.4'
+        option ipaddr '192.168.4.254'
+        option netmask '255.255.255.0'
+
+config interface 'school'
+        option ifname 'eth2'
+        option proto 'dhcp'
+        option peerdns '0'
+        option defaultroute '0'
+
+
+config interface 'wan01'
+        option ifname 'eth1'
+        option proto 'pppoe'
+        option username 'xxxxxx'
+        option password 'xxxxxx'
+        option metric '10'
+
+config interface 'wan02'
+        option ifname 'eth3'
+        option proto 'pppoe'
+        option username 'xxxxxx'
+        option password 'xxxxxx'
+        option metric '20'
+
+config interface 'schoolv6'
+        option ifname 'eth2'
+        option proto 'dhcpv6'
+        option reqaddress 'try'
+        option reqprefix 'auto'
+
+config route
+        option interface 'school'
+        option target '10.0.0.0'
+        option netmask '255.0.0.0'
+        option gateway '10.xxx.xxx.1'
+
+config 'route6'
+        option 'interface' 'schoolv6'
+        option 'target' '::/0'
+        option 'gateway' 'fe80::5639:dfff:fece:e9e3'
+

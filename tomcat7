@@ -1,0 +1,29 @@
+#!/bin/sh 
+#
+# description: Auto-starts tomcat
+# processname: tomcat
+
+export JAVA_HOME=/opt/java/default
+export CATALINA_HOME=/opt/java/apache-tomcat
+
+EXEC=$CATALINA_HOME/bin/daemon.sh
+USER=xxx
+
+
+case $1 in
+ start)
+ 	"$EXEC" --java-home $JAVA_HOME --catalina-home $CATALINA_HOME --tomcat-user $USER start
+ ;;
+ stop) 
+ 	"$EXEC" --java-home $JAVA_HOME --catalina-home $CATALINA_HOME --tomcat-user $USER stop
+ ;;
+ restart)
+ 	stop 
+ 	start 
+ ;;
+ *)
+ 	echo "Usage: $0 start | stop | restart"
+ ;;
+esac 
+exit 0
+

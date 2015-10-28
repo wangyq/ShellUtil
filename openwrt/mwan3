@@ -1,0 +1,54 @@
+config interface 'wan01'
+        option enabled '1'
+        list track_ip '61.135.169.125'
+        option reliability '1'
+        option count '1'
+        option timeout '2'
+        option interval '5'
+        option down '3'
+        option up '3'
+
+config interface 'wan02'
+        option enabled '1'
+        list track_ip '61.135.185.17'
+        option reliability '1'
+        option count '1'
+        option timeout '2'
+        option interval '5'
+        option down '3'
+        option up '3'
+
+config member 'wan1_m1_w3'
+	option interface 'wan01'
+	option metric '1'
+	option weight '3'
+
+config member 'wan1_m2_w3'
+	option interface 'wan01'
+	option metric '2'
+	option weight '3'
+
+config member 'wan2_m1_w3'
+	option interface 'wan02'
+	option metric '1'
+	option weight '3'
+
+config member 'wan2_m2_w2'
+	option interface 'wan02'
+	option metric '2'
+	option weight '2'
+
+config policy 'wan1_only'
+	list use_member 'wan1_m1_w3'
+
+config policy 'wan2_only'
+	list use_member 'wan2_m1_w3'
+
+config policy 'balanced'
+	list use_member 'wan1_m1_w3'
+	list use_member 'wan2_m1_w3'
+
+config rule 'default_rule'
+	option dest_ip '0.0.0.0/0'
+	option use_policy 'balanced'
+
