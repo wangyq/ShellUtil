@@ -4,10 +4,6 @@
  *  
  *  本脚本仿真微信/易信平台，对你的公众号指定的URL进行访问并显示响应信息值，用于开发和调试公众号
  *  
- *  JoStudio, 2013.10.10
- *  
- *  Web:  http://www.jostudio.org
- *  BLOG： http://blog.csdn.net/c80486
  *  
  */
 
