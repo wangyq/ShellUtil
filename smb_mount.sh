@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# for Centos , you need to install cifs file utility, as following:
+# yum install cifs-utils
+#
+
 SMB_SERVER=//192.168.0.xx/down
 MOUNT_DIR=/home/xx/Downloads/mydown
 UID=xx
