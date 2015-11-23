@@ -1,5 +1,17 @@
 #!/bin/sh
 
+# == for archlinux ==¬
+#sudo mkdir -p /etc/openvswitch¬
+#sudo ovsdb-tool create /etc/openvswitch/conf.db¬
+#sudo ovsdb-server --remote=punix:/run/openvswitch/db.sock \¬
+#                 --remote=db:Open_vSwitch,Open_vSwitch,manager_options \¬
+#                 --pidfile --detach¬
+#sudo ovs-vsctl --db=punix:/run/openvswitch/db.sock  --no-wait init¬
+#sudo ovs-vsctl   --no-wait init¬
+¬
+# == end of archlinux ==¬
+
+
 sudo mkdir -p /usr/local/etc/openvswitch 
 sudo ovsdb-tool create /usr/local/etc/openvswitch/conf.db /usr/share/openvswitch/vswitch.ovsschema 
 
