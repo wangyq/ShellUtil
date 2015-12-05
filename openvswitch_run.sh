@@ -1,6 +1,9 @@
 #!/bin/sh
 
 # == for archlinux ==¬
+#sudo pacman -S openvswitch
+#sudo modeprobe openvswitch  (important!!)
+
 #sudo mkdir -p /etc/openvswitch¬
 #sudo ovsdb-tool create /etc/openvswitch/conf.db¬
 #sudo ovsdb-server --remote=punix:/run/openvswitch/db.sock \¬
