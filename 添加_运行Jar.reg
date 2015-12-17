@@ -1,0 +1,8 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\*\shell\JarRun]
+@="‘À––Jar"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\*\shell\JarRun\command]
+@="D:\\Java\\jdk1.8.0_45\\bin\\javaw.exe -jar \"%1\""
+
