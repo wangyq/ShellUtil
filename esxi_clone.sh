@@ -39,9 +39,11 @@ clone_vm()
     DEBUG=$4
     
     if [ -n "$DEBUG" ]; then
+        echo "mkdir -p $dstpath"
         echo "cp $srcpath/$vmname.vmx $dstpath/$vmname.vmx"
         echo "vmkfstools -i $srcpath/$vmname.vmdk -d thin $dstpath/$vmname.vmdk"
     else
+        mkdir -p $dstpath
         cp $srcpath/$vmname.vmx $dstpath/$vmname.vmx
         vmkfstools -i $srcpath/$vmname.vmdk -d thin $dstpath/$vmname.vmdk
     fi
