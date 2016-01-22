@@ -1,5 +1,8 @@
 #!/bin/sh
 
+#build php source using this:
+#./configure --prefix=/usr/local/php5.5 --enable-fpm --with-fpm-systemd --enable-mbstring --with-mysql --with-curl --with-zlib --with-gd --enable-zip --with-config-file-path=/usr/local/php5.5
+
 # All signal's name and number can be found using command: "kill -l"
 S_TERM=SIGQUIT   #SIGQUIT=3, SIGTERM=15, SIGKILL=9
 S_RELOAD=SIGUSR2  #SIGHUP=1 
