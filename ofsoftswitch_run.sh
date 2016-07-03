@@ -7,7 +7,7 @@ PTCP=6653
 
 #switch ip and controller ip:port to connect
 SWITCHIP=192.168.100.190
-CONTROLLERIP=192.168.100.155
+CONTROLLERIP=192.168.100.60
 CPTCP=6633
 
 start()
@@ -34,6 +34,11 @@ conn()
 run_cmd()
 {
 	echo "run command done."
+}
+
+show()
+{
+	dpctl tcp:127.0.0.1:$PTCP stats-flow table=0
 }
 
 #==== Here is the entry of script ====

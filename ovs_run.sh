@@ -6,7 +6,7 @@ PTCP=6653
 
 #switch ip and controller ip:port to connect
 SWITCHIP=192.168.100.190
-CONTROLLERIP=192.168.100.155
+CONTROLLERIP=192.168.100.60
 CPTCP=6633
 
 start()
@@ -36,6 +36,7 @@ create()
         sudo ovs-vsctl set-fail-mode  $BRNAME secure
         sudo ovs-vsctl add-port $BRNAME ens34
         sudo ovs-vsctl add-port $BRNAME ens35
+        sudo ovs-vsctl set bridge $BRNAME protocols=OpenFlow13
         sudo ovs-vsctl set-controller $BRNAME tcp:$CP_IP:$CPTCP
         echo "Start done."
 }
@@ -50,6 +51,8 @@ destroy()
 show()
 {
         sudo ovs-vsctl show
+        echo "Now show flow table now : "
+        sudo ovs-ofctl -O OpenFlow13 dump-flows $BRNAME
 }
 
 run_cmd()
@@ -74,7 +77,7 @@ case $1 in
         show)
                 show ;;
         *)
-        echo "Usage: $0 start | stop | create <controller-ip> | show "
+        echo "Usage: $0 start | stop | create <controller-ip> | destroy | show "
 esac
 }
 
