@@ -8,13 +8,16 @@
 
 # paste using ":set noautoindent"
 
+#The network prefix 
+NETPRE=MYNET-
+
 run()
 {
 DEBUG=$1
 
 SW=vSwitch3
 
-STARTVID=15
+STARTVID=511
 
 
 #LAN=(R1-R2 R1-R3 R2-R3 R2-R4 R3-R4 R3-R5 R4-R5 R4-R6 R5-R6)
@@ -24,12 +27,15 @@ STARTVID=15
 i=$STARTVID
 LAN="R1-R2 R1-R3 R2-R3 R2-R4 R3-R4 R3-R5 R4-R5 R4-R6 R5-R6"
 for net in $LAN ; do
+
+    NETNAME=$NETPRE$net
+
     if [ -n "$DEBUG" ] ; then
-        echo "esxcfg-vswitch -A $net $SW"
-        echo "esxcfg-vswitch -p $net -v $i $SW"
+        echo "esxcfg-vswitch -A $NETNAME $SW"
+        echo "esxcfg-vswitch -p $NETNAME -v $i $SW"
     else
-        esxcfg-vswitch -A $net $SW
-        esxcfg-vswitch -p $net -v $i $SW
+        esxcfg-vswitch -A $NETNAME $SW
+        esxcfg-vswitch -p $NETNAME -v $i $SW
 
     fi
     #esxcfg-vswitch -A $net -v $i $SW  (error: must one opertation a time)
