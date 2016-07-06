@@ -30,9 +30,12 @@ for net in $LAN ; do
 
     NETNAME=$NETPRE$net
 
-    if [ -n "$DEBUG" ] ; then
+    if [ "$DEBUG"x = "test"x ] ; then
         echo "esxcfg-vswitch -A $NETNAME $SW"
         echo "esxcfg-vswitch -p $NETNAME -v $i $SW"
+        echo "esxcfg-vswitch -D $NETNAME $SW"
+    elif [ "$DEBUG" = "delete" ]; then
+        esxcfg-vswitch -D $NETNAME $SW
     else
         esxcfg-vswitch -A $NETNAME $SW
         esxcfg-vswitch -p $NETNAME -v $i $SW
@@ -44,7 +47,7 @@ for net in $LAN ; do
     i=$(($i + 1))
 done
 
-if [ -z "$DEBUG" ] ; then
+if [ "$DEBUG"x != "test"x ] ; then
     esxcfg-vswitch -l
 fi
 
@@ -61,10 +64,12 @@ main()
 case $1 in
     run)
         run ;;
+    delete)
+        run delete ;;
     test)
         run test ;;
     *)
-    echo "Usage: $0 run | test"
+    echo "Usage: $0 run | delete | test"
 esac
 }
 
