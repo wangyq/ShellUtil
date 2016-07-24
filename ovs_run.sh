@@ -1,14 +1,28 @@
 #! /bin/sh
 
-BRNAME=br0
-
-PTCP=6653
-
 #switch ip and controller ip:port to connect
-SWITCHIP=192.168.100.190
-CONTROLLERIP=192.168.100.60
+CONTROLLERIP=172.16.16.10
 CPTCP=6633
 
+BRNAME=br0
+
+# ======================
+# load variable from file.
+if [ -x ./load_data.sh ]; then
+. ./load_data.sh
+else
+    echo "Error: file not found!(load_data.sh)"
+fi
+
+#OFID=0000000000000009
+#INTERFACES="ens34 ens35"
+
+# == set global variable ==
+OFID=${GDATA[0]}
+INTERFACES=${GDATA[1]}
+
+#=================
+#
 start()
 {
         sudo systemctl restart ovsdb-server
@@ -22,9 +36,9 @@ stop()
         sudo systemctl stop ovs-vswitchd
 }
 
-create()
+add()
 {
-        echo "Make sure bridge interface is up!"
+        echo "Make sure bridge interface is up! interfaces=$INTERFACES"
 
         CP_IP=$1
         if [ -z "$CP_IP" ] ; then
@@ -34,14 +48,19 @@ create()
 
         sudo ovs-vsctl add-br $BRNAME
         sudo ovs-vsctl set-fail-mode  $BRNAME secure
-        sudo ovs-vsctl add-port $BRNAME ens34
-        sudo ovs-vsctl add-port $BRNAME ens35
-        sudo ovs-vsctl set bridge $BRNAME protocols=OpenFlow13
+
+        for int in $INTERFACES ; do
+            sudo ifconfig $int up
+            sudo ovs-vsctl add-port $BRNAME $int
+            #sudo ovs-vsctl add-port $BRNAME ens35
+        done
+
+        sudo ovs-vsctl set bridge $BRNAME protocols=OpenFlow13 other-config:datapath-id=$OFID
         sudo ovs-vsctl set-controller $BRNAME tcp:$CP_IP:$CPTCP
         echo "Start done."
 }
 
-destroy()
+del()
 {
         sudo ovs-vsctl del-controller $BRNAME
         sudo ovs-vsctl del-br $BRNAME
@@ -66,10 +85,10 @@ main()
 case $1 in
         start)
                 start ;;
-        create)
-                create $2 ;;
-        destroy)
-                destroy ;;
+        add)
+                add $2 ;;
+        del)
+                del ;;
         run)
                 run_cmd ;;
         stop)
@@ -77,7 +96,7 @@ case $1 in
         show)
                 show ;;
         *)
-        echo "Usage: $0 start | stop | create <controller-ip> | destroy | show "
+        echo "Usage: $0 start | stop | add <controller-ip> | del | show "
 esac
 }
 
