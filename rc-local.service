@@ -1,26 +1,37 @@
-
-#
-# please locate it to "/etc/systemd/system"
-# and then "systemctl enable/restart rc-local.service"
+# ====================
+# Locate the file in "/etc/systemd/system/rc-local.service" or "/usr/lib/systemd/system/rc-local.service"
+# then make it run at system boot time with "systemctl enable/restart rc-local.service"
 # You should using "systemctl restart ... " to re-run the script!
 #
 
 [Unit]
-Description=run local script at startup
+Description=/etc/rc.local compatibility
 ConditionPathExists=/etc/rc.local
 
-Wants=network.target network-online.target
-After=network.target network-online.target
+# add your dependency of service
+#Requires=netctl@INTERFACE.service
 
-[Service] 
+# Here make sure the rc-local to be run lately
+After=syslog.target  network.target network-online.target
+
+[Service]
 #Type=forking
 Type=oneshot
-RemainAfterExit=yes
 
-ExecStart=/etc/rc.local
-#ExecStart=/etc/rc.local start
+#script to run, here add one parameter of 'start'
+ExecStart=/etc/rc.local start
 #ExecStop=/etc/rc.local stop
 
+# disable timeout logic
+TimeoutSec=0
+
+#Out to tty if your want
+StandardOutput=tty
+RemainAfterExit=yes
+
+# not supprted in the future...
+SysVStartPriority=99
+
 [Install]
-WantedBy=multi-user.target 
+WantedBy=multi-user.target
 
