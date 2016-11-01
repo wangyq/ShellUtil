@@ -1,5 +1,5 @@
 # ====================
-# Locate the file in "/etc/systemd/system/rc-local.service" or "/usr/lib/systemd/system/rc-local.service"
+# Locate this file in "/etc/systemd/system/rc-local.service" or "/usr/lib/systemd/system/rc-local.service"
 # then make it run at system boot time with "systemctl enable/restart rc-local.service"
 # You should using "systemctl restart ... " to re-run the script!
 #
