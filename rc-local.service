@@ -8,7 +8,7 @@
 Description=/etc/rc.local compatibility
 ConditionPathExists=/etc/rc.local
 
-# add your dependency of service
+# add your service dependencies here.
 #Requires=netctl@INTERFACE.service
 
 # Here make sure the rc-local to be run lately
@@ -25,7 +25,7 @@ ExecStart=/etc/rc.local start
 # disable timeout logic
 TimeoutSec=0
 
-#Out to tty if your want
+#Out to tty as you want...
 StandardOutput=tty
 RemainAfterExit=yes
 
