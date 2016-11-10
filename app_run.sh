@@ -27,6 +27,11 @@ get_pid()
 #----------------------------------------------------#
 run()
 {
+    APP="hello goodday bye"
+    for app in $APP; do
+        echo $app
+    done
+
         #echo "run ......"
         # nohup /bin/sh -c "command_file.sh" > /dev/null 2>&1 &
 
