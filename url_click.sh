@@ -17,8 +17,8 @@ function random()
 #----------------------------------------------------#
 run()
 {
-URL="http://www.sdnlab.com/18092.html 
-    http://www.sdnlab.com/17863.html "
+URL="http://www.baidu.com 
+    http://www.163.com "
 
 COUNT=200
 rmin=5
