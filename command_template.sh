@@ -1,6 +1,16 @@
 #!/bin/sh
 
-
+#====================================================
+#获得区间[min,max]的随机数
+#Usage: random min max
+#
+function random()
+{
+    min=$1
+    max=$(($2-$1+1))   #range
+    num=$(date +%s%N)  #too long to calculate!
+    echo $((num%max+min))   #进行求余数运算即可
+}
 
 #----------------------------------------------------#
 # get process'id from process name using grep command
