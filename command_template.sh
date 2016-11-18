@@ -27,7 +27,7 @@ MAXVALUE=2147483647
     elif [ $max -lt 65536 ]; then num=`od -An -N2 -i /dev/urandom`
     elif [ $max -lt 16777216 ]; then num=`od -An -N3 -i /dev/urandom`
     else
-        num=`od -An -N2 -i /dev/urandom`
+        num=`od -An -N4 -i /dev/urandom`
         if [ 0 -gt $num ]; then num=$((-num)); fi
     fi
 
