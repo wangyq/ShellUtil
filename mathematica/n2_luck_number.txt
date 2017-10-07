@@ -1,0 +1,7 @@
+# Given a positive integer N,
+# exists a integer n, such that 2^n = N...
+# that means for integer N, n is a luck number(relative to 2^n)
+
+fract[x_]:=If[x == Floor[x],1,x - Floor[x]];
+power2[x_]:=Block[{Z=fract[Log[10,x]],n = 1,u = fract[Log[10,x + 1]],pow = Log[10,2],t = pow},While[N[t<Z] || N[t>=u], pow = pow + Log[10,2];t = fract[pow]; n = n + 1];n]
+
