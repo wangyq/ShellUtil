@@ -10,8 +10,9 @@ SET CUR_DIR=%~dp0
 SET DRIVER_DIR=%~d0
 
 ::Python的安装路径
-SET PYTHON_DIR=%DRIVER_DIR%/devetools\Python34
-if exist %PYTHON_DIR%/nul (
+SET PYTHON_DIR=%DRIVER_DIR%/devetools\Python36
+
+if exist %PYTHON_DIR%/nul ( 
 	SET PATH=%PATH%;%PYTHON_DIR%/;%PYTHON_DIR%/Scripts
 )
 
