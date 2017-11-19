@@ -15,7 +15,9 @@ start()
 codepage=cp936,uid=0
 
     #sudo mount -t cifs -o username=user,password=123456789,uid=xx,gid=xx $SMB_SERVER $MOUNT_DIR
-    sudo mount -t cifs -o username=user,password=123456789,uid=$UID,gid=$GID $SMB_SERVER $MOUNT_DIR
+    #sudo mount -t cifs -o username=user,password=123456789,uid=$UID,gid=$GID $SMB_SERVER $MOUNT_DIR
+    
+    sudo mount -t cifs -o vers=1.0,username=user,password=123456789,uid=$UID,gid=$GID $SMB_SERVER $MOUNT_DIR
 }
 
 stop()
