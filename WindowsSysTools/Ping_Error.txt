@@ -1,0 +1,5 @@
+ipconfig /flushdns
+ipconfig /registerdns
+netsh winsock reset
+
+
