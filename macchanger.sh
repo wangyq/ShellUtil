@@ -25,6 +25,48 @@ done
 
 }
 
+changemac()
+{
+	INTF=$1
+	echo "interface is: $INTF"
+	if [ -z "$INTF" ] ; then
+		return
+	fi
+
+	ip link set dev $INTF down
+	ip link set dev $INTF address $macaddr
+	ip link set dev $INTF up
+	ip link show $INTF
+}
+
 # entry for run
-run
+
+#changemac "eth0"
+
+usage()
+{
+    #echo "$# parameters"    
+    echo "Usage: "
+    echo "     $0 INTF1 INTF2 ..."
+    echo "        where INTF1,INTF2 is the network interface name, such as eth0, enp3s0, etc."	
+}
+
+#----------------------------------------------------#
+# shell entry to exec!
+#
+#----------------------------------------------------#
+main()
+{
+	if [ $# = 0 ] ; then
+		usage $@;
+		return ;
+	fi
+	for f in $*;
+    do
+        changemac $f
+    done;
+}
+
+# shell entry to start
+main $@
 
