@@ -22,7 +22,7 @@ set EXECUTABLE="%SVNSERVER_DIR%\bin\svnserve.exe"
 ::请在此目录下创建每个存储库, 例如paper, project, etc.
 SET REPOS_DIR=E:\svn_data\svn_repo
 ::多版本库配置, 用户统一认证
-SET CONF_FILE=E:\svn_data\svn_repo\conf\svnserve.conf
+SET CONF_FILE=E:\svn_data\conf\svnserve.conf
 
 
 ::默认端口3690
