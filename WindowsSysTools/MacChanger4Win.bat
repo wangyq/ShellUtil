@@ -3,7 +3,34 @@ cls
 
 CALL :RandMacAddress MAC
 ECHO "Mac = %MAC%"
+
+CALL :get-interfaces-netsh-info ifname NUM
+ECHO "%ifname[0]% , %NUM% "
+
+for /l %%i in (0,1,%NUM%) do ( 
+   echo !ifname[%%i]! 
+)
+
 GOTO :EOF
+
+:: --------------------------------------------------------------------------
+:: Return the interfaces information from the netsh command
+::
+:get-interfaces-netsh-info 
+	setlocal enableDelayedExpansion
+	SET /A i=0
+	FOR /F "skip=2 tokens=2,3*" %%a in ('netsh interface show interface') do (
+		if /i "%%a" neq "State" (
+			REM set %1[%%c].state=%%a
+			REM set ints[!ii!].state=%%a
+			set "%~1[!i!]=%%c"
+			set /A i+=1
+			echo "%%a , %%c, !i!, %~1[!i!]%"
+		)
+	)
+	endlocal & set "%~2=%i%"
+	goto :eof
+	REM exit /b 0
 
 REM ======================================
 REM int value to HEX char
