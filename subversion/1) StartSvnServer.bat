@@ -1,6 +1,5 @@
-REM 不需要管理员权限运行此脚本
-
 @echo off
+REM 不需要管理员权限运行此脚本
 REM 请设置此目录为你的 仓储目录
 REM 注意先用命令: "svnadmin.exe  create 你的仓储目录" 创建之
 REM set REPOS_DIR=L:/svn_data/svn_repos
@@ -14,15 +13,17 @@ REM set /P REPOS_DIR=请输入SVN存储的路径(例如：L:/svn_data/svn_repos) :
 ::SET REPOS_DIR=%DRIVER_DIR%\svn_data\svn_repos
 
 color 0A
+SET DRIVER=E:
 
-SET SVNSERVER_DIR=E:\svn-win32-1.8.17
+SET SVNSERVER_DIR=%DRIVER%\svn_data\svn-win32-1.8.17
 
 REM 为了防止目录有空格，加了引号
 set EXECUTABLE="%SVNSERVER_DIR%\bin\svnserve.exe"
 ::请在此目录下创建每个存储库, 例如paper, project, etc.
-SET REPOS_DIR=E:\svn_data\svn_repo
+SET REPOS_DIR=%DRIVER%\svn_data\svn_repo
 ::多版本库配置, 用户统一认证
-SET CONF_FILE=E:\svn_data\conf\svnserve.conf
+SET CONF_DIR=%DRIVER%\svn_data\conf
+SET CONF_FILE=%CONF_DIR%\svnserve.conf
 
 
 ::默认端口3690
@@ -38,6 +39,8 @@ if not exist  %REPOS_DIR%/nul (
 ECHO 可执行文件: %EXECUTABLE%
 ECHO SVN仓储路径: %REPOS_DIR%
 ECHO 访问端口(默认3690):%DEFAULT_PORT%, 监听主机: %HOST%
+ECHO 配置文件: %CONF_DIR%\passwd, %CONF_DIR%\authz
+ECHO .
 
 ECHO 请按CTRL+C结束 SVN-Server 运行!
 ECHO 正在运行SVN服务器......
