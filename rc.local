@@ -1,5 +1,14 @@
 #!/bin/sh
 
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
 CMD=$1
 
 if [ -z "$CMD" ]; then
@@ -8,7 +17,7 @@ fi
 
 #sleep 5s
 
-echo "$CMD : Haha, date=`date` " >> /home/guest/haha.txt
+#echo "$CMD : Haha, date=`date` " >> /home/guest/haha.txt
 
 if [ "$CMD" = "start" ]; then
 	echo "rc.local : $CMD"
@@ -23,3 +32,7 @@ fi
 
 # run command as nobody 
 #su - nobody -s /bin/sh -c "nohup /home/r203/lightjbl -p 1106  >/dev/null 2>&1 &"
+
+
+exit 0
+
