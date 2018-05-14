@@ -1,7 +1,8 @@
 #!/bin/bash
 # 
-# This script is just for centos!
+# This script is just for centos and fedora!
 # Just put it on "/sbin/"
+# Caution: !!! make sure NM_CONTROLLED=no in ifcfg-**
 #
 
 #Where ip command is?
