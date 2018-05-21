@@ -1,0 +1,10 @@
+# Run the hourly jobs
+SHELL=/bin/bash
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=""
+
+#minute hour day_of_month month day_of_week user command
+#02        2   *            *     *       root   reboot
+
+#macchanger
+02        4   *            *     *       root  /usr/local/bin/macchanger.sh ens32 
