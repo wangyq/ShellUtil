@@ -33,6 +33,8 @@ fi
 # run command as nobody 
 #su - nobody -s /bin/sh -c "nohup /home/r203/lightjbl -p 1106  >/dev/null 2>&1 &"
 
+#mount -t cifs -o vers=1.0,uid=wang,gid=wang,credentials=/home/wang/.cifs //192.168.60.61/wang /home/wang/Downloads/datas1
+
 
 exit 0
 
