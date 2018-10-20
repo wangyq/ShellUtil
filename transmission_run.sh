@@ -21,8 +21,9 @@ get_pid()
 start()
 {
 	#echo "start ......"
+	$APP_EXEC 
 	#$APP_EXEC -e /dev/null
-    sudo runuser - p203 -s /bin/sh -c "nohup $APP_EXEC -e /dev/null >/dev/null 2>&1 &"
+    #sudo runuser - user -s /bin/sh -c "nohup $APP_EXEC -e /dev/null >/dev/null 2>&1 &"
 
 	echo "start finished!"
 }
@@ -38,6 +39,19 @@ stop()
 		true	
 		#echo $APP_NAME not found!
 	fi
+}
+
+stopadmin()
+{
+    #echo "stop ......"
+    local PID=`get_pid $APP_NAME`
+        #echo $APP_NAME\' pid = $PID !
+    if [ "$PID" != "" ];then
+        kill -s $S_TERM  $PID
+    else
+        true
+        #echo $APP_NAME not found!
+    fi
 }
 
 restart()
@@ -69,7 +83,9 @@ case $1 in
 		start  ;;
 	reload)
 		reload ;;
+    stopadmin)
+        stopadmin ;;
 	*)
-        echo "Usage: $0 start | stop | restart | reload"
+        echo "Usage: $0 start | stop | restart | reload | stopadmin"
 esac
 
