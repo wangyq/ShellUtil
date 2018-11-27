@@ -1,0 +1,16 @@
+# for 
+[Unit]
+Description=Daemon to start KCPTun Client
+Wants=network-online.target
+After=network.target
+
+[Service]
+Type=simple
+User=nobody
+
+ExecStart=/usr/local/bin/client_linux_amd64 -c /etc/kcptun/client-config.json
+Restart=always 
+
+[Install]
+WantedBy=multi-user.target
+
