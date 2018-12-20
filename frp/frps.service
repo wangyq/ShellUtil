@@ -1,0 +1,17 @@
+# for 
+[Unit]
+Description=Daemon to start frp server
+Wants=network-online.target
+After=network.target
+
+[Service]
+Type=simple
+User=nobody
+
+ExecStart=/usr/local/bin/frps -c /etc/frp/frps.ini
+#ExecReload=/bin/kill -HUP $MAINPID
+#Restart=on-failure
+Restart=always 
+
+[Install]
+WantedBy=multi-user.target
