@@ -1,8 +1,9 @@
 # for 
 [Unit]
 Description=Daemon to start frp server
-Wants=network-online.target
-After=network.target
+#Wants=network-online.target
+#After=network.target
+After=syslog.target  network.target network-online.target
 
 [Service]
 Type=simple
