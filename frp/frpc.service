@@ -1,6 +1,16 @@
 # for 
 [Unit]
 Description=Daemon to start frp server
+
+#
+StartLimitBurst=5
+
+#restart  service forever if setting its value to 0
+StartLimitIntervalSec=3600
+
+#restart your server if the start limit is reached
+StartLimitAction=reboot
+
 #Wants=network-online.target
 #After=network.target
 After=syslog.target  network.target network-online.target
@@ -12,7 +22,10 @@ User=nobody
 ExecStart=/usr/local/bin/frpc -c /etc/frp/frpc.ini
 #ExecReload=/bin/kill -HUP $MAINPID
 #Restart=on-failure
-Restart=always 
+Restart=always
+
+#restart after 5 minutes 
+RestartSec=360
 
 [Install]
 WantedBy=multi-user.target
