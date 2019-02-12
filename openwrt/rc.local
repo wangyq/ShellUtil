@@ -1,0 +1,26 @@
+# Put your custom commands here that should be executed once
+# the system init finished. By default this file does nothing.
+
+
+# mkdir and mount
+mkdir /tmp/udisk
+mount /dev/sda1  /tmp/udisk
+
+#enable swap
+#mkswap /tmp/udisk/swapfile
+swapon /tmp/udisk/swapfile
+
+# set hdd to auto standby, 60=5min, 120=10min
+hdparm -S 120 /dev/sda
+
+# ipset for mwan3
+/root/load_ipset.sh  /etc/cmcc.txt  cmcc
+#/root/load_ipset.sh  /etc/unicom.txt  unicom
+
+
+#add ipv6 default route
+#ip -6 route add default via fe80::fe48:efff:fec9:bd04 dev pppoe-WANUNICOM metric 200
+#ip -6 route add default via fe80::1 dev eth0.3 metric 300
+
+exit 0
+
