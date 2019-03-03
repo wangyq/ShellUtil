@@ -3,6 +3,10 @@
 ifname=WANUNICOM_6
 device=pppoe-WANUNICOM
 [ -z "$ifname" -o "$INTERFACE" = "$ifname" ] || exit 0
-ip -6 route add `ip -6 route show default| grep $device | grep via | sed -e 's/from [^ ]* //' | sed -e '2,$d'`
-logger -t IPv6 "Add IPv6 default route for WANUNICOM."
+
+METRIC=200
+ip -6 route add `ip -6 route show default| grep $device | grep via | sed -e 's/from [^ ]* //' |sed -e 's/metric [^ ]* //' | sed -e '2,$d'`  metric $METRIC
+
+#ip -6 route add `ip -6 route show default| grep $device | grep via | sed -e 's/from [^ ]* //' | sed -e '2,$d'`
+logger -t IPv6 "Add IPv6 default route for WANUNICOM with metric=$METRIC."
 
