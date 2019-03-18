@@ -1,7 +1,8 @@
 #!/bin/sh
 [ "$ACTION" = ifup ] || exit 0
-ifname=WANUNICOM_6
-device=pppoe-WANUNICOM
+ifname=wanunicom_6
+device=pppoe-wanunicom
+
 [ -z "$ifname" -o "$INTERFACE" = "$ifname" ] || exit 0
 
 METRIC=200

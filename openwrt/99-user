@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo "INTERFACE=$INTERFACE,  DEVICE=$DEVICE, ACTION=$ACTION" >> /tmp/99-user.txt
+
