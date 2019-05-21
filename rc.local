@@ -33,8 +33,23 @@ fi
 # run command as nobody 
 #su - nobody -s /bin/sh -c "nohup /home/r203/lightjbl -p 1106  >/dev/null 2>&1 &"
 
-#mount -t cifs -o vers=1.0,uid=wang,gid=wang,credentials=/home/wang/.cifs //192.168.60.61/wang /home/wang/Downloads/datas1
+#mount
+#mount -t cifs -o vers=1.0,uid=user,gid=user,credentials=/home/user/.cifs //192.168.120.61/user /home/user/Downloads/datas1
 
+#for kcptun
+#/usr/local/bin/client_linux_amd64 -c /etc/kcptun/client-config.json
+#/usr/local/bin/client_linux_amd64 -c /etc/kcptun/client-config.json 2>&1 &
+#su - nobody -s /bin/sh -c "nohup /usr/local/bin/client_linux_amd64 -c /etc/kcptun/client-config.json >/dev/null 2>&1 &"
+
+sleep 2s
+
+#ss client
+#su - nobody -s /bin/sh -c "nohup ss-local -c /etc/shadowsocks/shadowsocks.conf  >/dev/null 2>&1 &"
+
+
+#ssh proxy
+#ssh -f -6 -N -D :2080 localhost
+runuser -l user -s "/bin/sh"  -c "ssh -f -6 -N -D :2080 localhost"
 
 exit 0
 
