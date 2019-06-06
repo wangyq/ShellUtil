@@ -3,8 +3,8 @@ color 2F
 echo 正在卸载Apache HTTP服务器......
 
 set CUR_DIR=%~dp0
-
-set EXECUTABLE=%CUR_DIR%\bin\httpd.exe
+set APACHEDIR=Apache24
+set EXECUTABLE=%CUR_DIR%\%APACHEDIR%\bin\httpd.exe
 
 REM net stop "Apache2"
 call "%EXECUTABLE%" -k stop

@@ -2,7 +2,8 @@
 color 0A
 
 set CUR_DIR=%~dp0
-set EXECUTABLE=%CUR_DIR%\bin\httpd.exe
+set APACHEDIR=Apache24
+set EXECUTABLE=%CUR_DIR%\%APACHEDIR%\bin\httpd.exe
 
 echo 正在安装Apache HTTP服务器......
 
