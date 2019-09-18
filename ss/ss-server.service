@@ -8,7 +8,7 @@ After=network.target
 Type=simple
 User=nobody
 
-ExecStart=/usr/bin/ss-server -c /etc/shadowsocks/server.json
+ExecStart=/usr/bin/ss-server -c /etc/shadowsocks/ss-server.json
 #ExecStart=/bin/sh -c "/usr/bin/ss-local -c /etc/shadowsocks/shadowsocks.conf  >/dev/null 2>&1 &"
 Restart=always 
 
