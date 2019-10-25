@@ -20,6 +20,8 @@ Type=simple
 User=nobody
 
 ExecStart=/usr/local/bin/frpc -c /etc/frp/frpc.ini
+
+#RestartSec=5s
 #ExecReload=/bin/kill -HUP $MAINPID
 #Restart=on-failure
 Restart=always

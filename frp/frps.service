@@ -10,9 +10,12 @@ Type=simple
 User=nobody
 
 ExecStart=/usr/local/bin/frps -c /etc/frp/frps.ini
+
 #ExecReload=/bin/kill -HUP $MAINPID
 #Restart=on-failure
+
 Restart=always 
+RestartSec=5s
 
 [Install]
 WantedBy=multi-user.target
