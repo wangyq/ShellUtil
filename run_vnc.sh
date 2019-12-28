@@ -58,10 +58,13 @@ case $1 in
 			run_vnc "START" $2 $3 ;;
         stop)
             run_vnc "STOP"  $2 $3 ;;
+		restart)
+			run_vnc "STOP"  $2 $3
+			run_vnc "START" $2 $3 ;;
 		show)
 			show ;;
         *)
-        echo "Usage: $0 start <start-port> <end-port> | stop <start-port> <end-port> | show"
+        echo "Usage: $0 start <start-port> <end-port> | stop <start-port> <end-port> | restart | show"
 		echo "       where port number is from 1 to 20."
 		echo "       default port is 2"
 esac
