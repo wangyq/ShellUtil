@@ -1,0 +1,11 @@
+# Run the hourly jobs
+# place in dir: "/etc/cron.d/900user"
+
+SHELL=/bin/bash
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=root
+
+#minute hour day_of_month month day_of_week user command
+#02        3   *            *     *       root   reboot
+02        3   *            *     *       root   systemctl restart ss-server
+
