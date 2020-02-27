@@ -4,6 +4,7 @@
     "local_port":1080,
     "password":"haha",
     "timeout":600,
+	"fast_open":true,
     "method":"chacha20-ietf-poly1305"
 }
 
