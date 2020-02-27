@@ -43,18 +43,13 @@ is_ipv6_str() {
 #
 #----------------------------------------------------#
 run() {
-	#strs=$(cat a.txt)
-	strs=`$LOGCMD`
+	strs=$(cat a.txt)
+	#strs=`$LOGCMD`
 
 	local resalt=false
 
 	while read -r line; do
-		if ! $resalt; then
-			if [[ $line =~ $RESALT ]]; then
-				#echo "repeat salt found: $line"
-				resalt=true
-			fi
-		elif [[ $line =~ $FAILSHAKE ]]; then
+		if $resalt && [[ $line =~ $FAILSHAKE ]]; then
 			afirst=$(strindex "$line" "$FAILSHAKE")
 			last=$(strindex "$line" "${FAILSHAKE_END}")
 
@@ -74,6 +69,7 @@ run() {
 				fi
 			fi
 		elif [[ $line =~ $RESALT ]]; then
+			#echo "repeat salt found: $line"
 			resalt=true
 		else
 			resalt=false
