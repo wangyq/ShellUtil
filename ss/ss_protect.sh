@@ -12,11 +12,11 @@ FWRELOAD="firewall-cmd --reload	"
 FWLISTRULE="firewall-cmd --list-rich-rules "
 
 PROTOCOL=tcp
-PORT=44444
+PORT=443
 ACTION=reject  #drop
 
 PROTOCOL1=udp
-PORT1=44444
+PORT1=443
 ACTION1=reject
 
 #----------------------------------------------------#
