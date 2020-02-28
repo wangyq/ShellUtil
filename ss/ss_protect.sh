@@ -2,6 +2,7 @@
 
 DEBUG=true
 
+#LOGCMD="cat a.txt"
 LOGCMD="journalctl --no-pager --since today -u ss-server"
 
 RESALT="repeat salt detected"
@@ -29,24 +30,15 @@ strindex() {
 	[[ "$x" = "$1" ]] && echo -1 || echo "${#x}"
 }
 
-is_ipv6_str() {
-	local str=${1^^} #to upper case
-	local len=${#str}
-	if [ $len -gt 15 ]; then echo true; fi
-	if [[ $str = "*A*" ]] || [[ $str = "*B*" ]] || [[ $str = "*C*" ]] || [[ $str = "*D*" ]] || [[ $str = "*E*" ]] || [[ $str = "*F*" ]] || [[ $str = "*::*" ]]; then echo true; fi
-
-	echo false
-}
-
 #----------------------------------------------------#
 # do protect action with ip address and ip familiy
-# parameter :  ipaddr, isIpv6(true/false)
+# parameter :  ipaddr (for example, 13.25.68.21 or 2409:8880:3e01:200:100::b1)
 #----------------------------------------------------#
 do_protect(){
 	local ipstr=$1
-	local isIPv6=$2
+	local family="ipv4"
+	if [[ "$ipstr" =~ ":" ]]; then family="ipv6"; fi
 
-	if $isIPv6; then family="ipv6"; else family="ipv4"; fi
 	if ! $DEBUG; then
 		firewall-cmd --zone=public --add-rich-rule="rule family=$family source address=$ipstr port protocol=$PROTOCOL port=$PORT $ACTION"
 		firewall-cmd --zone=public --add-rich-rule="rule family=$family source address=$ipstr port protocol=$PROTOCOL1 port=$PORT1 $ACTION1"
@@ -60,24 +52,19 @@ do_protect(){
 #
 #----------------------------------------------------#
 run() {
-	local strs=$(cat a.txt)
-	#local strs=`$LOGCMD`
-
+	local strs=`${LOGCMD}`
 	local resalt=false
 
 	while read -r line; do
 		if $resalt && [[ $line =~ $FAILSHAKE ]]; then
-			local afirst=$(strindex "$line" "$FAILSHAKE")
+			local first=$(strindex "$line" "$FAILSHAKE")
 			local last=$(strindex "$line" "${FAILSHAKE_END}")
 
-			local alen=${#FAILSHAKE}
-			local first=$((afirst + alen))
+			local len=${#FAILSHAKE}
+			first=$((first + len))
 			if [ $first -le $last ]; then
-				local len=$((last - first))
-				local ipstr=${line:first:len}
-				local isIPv6=$(is_ipv6_str $ipstr)
-
-				do_protect "$ipstr"  $isIPv6
+				len=$((last - first))
+				do_protect ${line:first:len}
 			fi
 		elif [[ $line =~ $RESALT ]]; then
 			#echo "repeat salt found: $line"
@@ -85,8 +72,9 @@ run() {
 		else
 			resalt=false
 		fi
-
 	done <<<"$strs"
+
+	cat /dev/null > /var/spool/mail/root
 
 	echo "run finished!"
 }
@@ -112,3 +100,6 @@ main() {
 
 # shell entry to start
 main $@
+
+
+

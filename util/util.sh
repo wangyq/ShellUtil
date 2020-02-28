@@ -18,15 +18,6 @@ strindex() {
   	[[ "$x" = "$1" ]] && echo -1 || echo "${#x}"
 }
 
-is_ipv6_str(){
-	local str=${1^^}   #to upper case
-	local len=${#str}
-	if [ $len -gt 15 ] ; then  echo true; fi
-	if [[ $str = "*A*" ]] || [[ $str = "*B*" ]] || [[ $str = "*C*" ]] || [[ $str = "*D*" ]] || [[ $str = "*E*" ]] || [[ $str = "*F*" ]] || [[ $str = "*::*" ]] ; then echo true; fi
-
-	echo false
-}
-
 #----------------------------------------------------#
 # get process'id from process name using grep command
 # 
