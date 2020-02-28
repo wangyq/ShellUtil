@@ -13,7 +13,7 @@ FWLISTRULE="firewall-cmd --list-rich-rules "
 
 PROTOCOL=tcp
 PORT=44444
-ACTION=reject
+ACTION=reject  #drop
 
 PROTOCOL1=udp
 PORT1=44444
@@ -39,34 +39,45 @@ is_ipv6_str() {
 }
 
 #----------------------------------------------------#
+# do protect action with ip address and ip familiy
+# parameter :  ipaddr, isIpv6(true/false)
+#----------------------------------------------------#
+do_protect(){
+	local ipstr=$1
+	local isIPv6=$2
+
+	if $isIPv6; then family="ipv6"; else family="ipv4"; fi
+	if ! $DEBUG; then
+		firewall-cmd --zone=public --add-rich-rule="rule family=$family source address=$ipstr port protocol=$PROTOCOL port=$PORT $ACTION"
+		firewall-cmd --zone=public --add-rich-rule="rule family=$family source address=$ipstr port protocol=$PROTOCOL1 port=$PORT1 $ACTION1"
+	else
+		echo "firewall-cmd --zone=public --add-rich-rule='rule family=$family source address=$ipstr port protocol=$PROTOCOL port=$PORT $ACTION' "
+	fi
+}
+
+#----------------------------------------------------#
 # run app program
 #
 #----------------------------------------------------#
 run() {
-	strs=$(cat a.txt)
-	#strs=`$LOGCMD`
+	local strs=$(cat a.txt)
+	#local strs=`$LOGCMD`
 
 	local resalt=false
 
 	while read -r line; do
 		if $resalt && [[ $line =~ $FAILSHAKE ]]; then
-			afirst=$(strindex "$line" "$FAILSHAKE")
-			last=$(strindex "$line" "${FAILSHAKE_END}")
+			local afirst=$(strindex "$line" "$FAILSHAKE")
+			local last=$(strindex "$line" "${FAILSHAKE_END}")
 
-			alen=${#FAILSHAKE}
-			first=$((afirst + alen))
+			local alen=${#FAILSHAKE}
+			local first=$((afirst + alen))
 			if [ $first -le $last ]; then
-				len=$((last - first))
-				ipstr=${line:first:len}
-				isIPv6=$(is_ipv6_str $ipstr)
+				local len=$((last - first))
+				local ipstr=${line:first:len}
+				local isIPv6=$(is_ipv6_str $ipstr)
 
-				if $isIPv6; then family="ipv6"; else family="ipv4"; fi
-				if ! $DEBUG; then
-					firewall-cmd --zone=public --add-rich-rule="rule family=$family source address=$ipstr port protocol=$PROTOCOL port=$PORT $ACTION"
-					firewall-cmd --zone=public --add-rich-rule="rule family=$family source address=$ipstr port protocol=$PROTOCOL1 port=$PORT1 $ACTION1"
-				else
-					echo "firewall-cmd --zone=public --add-rich-rule='rule family=$family source address=$ipstr port protocol=$PROTOCOL port=$PORT $ACTION' "
-				fi
+				do_protect "$ipstr"  $isIPv6
 			fi
 		elif [[ $line =~ $RESALT ]]; then
 			#echo "repeat salt found: $line"
