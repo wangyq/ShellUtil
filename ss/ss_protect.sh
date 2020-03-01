@@ -3,7 +3,8 @@
 DEBUG=true
 
 #LOGCMD="cat a.txt"
-LOGCMD="journalctl --no-pager --since today -u ss-server"
+SPAN=-2hr
+LOGCMD="journalctl --no-pager --since $SPAN -u ss-server"
 
 RESALT="repeat salt detected"
 FAILSHAKE="failed to handshake with "
