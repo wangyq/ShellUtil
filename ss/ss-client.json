@@ -1,0 +1,10 @@
+{
+    "server": "12.34.56.78",
+    "server_port": 80,
+    "password": "passwd",
+    "local_port": 1080,
+    "local_address": "0.0.0.0", //"local_local_ipv4_address", "local_ipv6_address"
+    "method": "xchacha20-ietf-poly1305", //"aes-256-gcm"
+    "timeout": 60,
+    "fast_open": true
+}
