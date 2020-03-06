@@ -49,7 +49,9 @@ sleep 2s
 
 #ssh proxy
 #ssh -f -6 -N -D :2080 localhost
-runuser -l user -s "/bin/sh"  -c "ssh -f -6 -N -D :2080 localhost"
+#runuser -l user -s "/bin/sh"  -c "ssh -f -6 -N -D :2080 localhost"
+#runuser -l user -s "/bin/sh"  -c "nohup ssh -f -6 -N -D :2080 localhost &"
+runuser -l user -s "/bin/sh"  -c "nohup ssh -f -6 -N -D :2080 localhost >/dev/null 2>&1 &"
 
 exit 0
 
