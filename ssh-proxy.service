@@ -5,7 +5,7 @@
 Description=SSH Proxy Service
 #Wants=network-online.target
 #After=network.target
-After=syslog.target  network.target network-online.target sshd.service
+After=syslog.target  network.target network-online.target
 
 [Service]
 Type=simple
