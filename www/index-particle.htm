@@ -3,8 +3,29 @@
 
 <head>
     <META content="text/html; charset=UTF-8" http-equiv=Content-Type>
-    <title>粒子背景</title>
-    <link rel="stylesheet" type="text/css" href="style.css" media="all">
+    <title>Welcome</title>
+    <!-- <link rel="stylesheet" type="text/css" href="style.css" media="all"> -->
+    <style type="text/css">
+        div#container {
+            margin-left: auto;
+            margin-right: auto;
+            width: 768px;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            color: white;
+        }
+
+        div#content {
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+
+            font-size: 12pt;
+            width: 80%;
+            border: 3px solid #73AD21;
+            padding: 10px;
+        }
+    </style>
     <style>
         html,
         body {
@@ -39,14 +60,20 @@
             top: 0px;
         }
     </style>
+    <base target="_blank">
+    </base>
 </head>
 
-<body id="login-page">
-    <canvas width="1293" height="717"></canvas>
+<body id="body-page">
+    <div id="container">
+        <H1>Welcome!</H1>
+        <div id="content">
+            <P>Good Good Study, Day Day Up! </P>
+        </div>
+    </div>
+
+    <canvas width="1920" height="1080"></canvas>
     <script>
-        /**
-         * Created by Administrator on 2016/6/29.
-         */
         var canvas = document.querySelector('canvas'),
             ctx = canvas.getContext('2d')
         canvas.width = window.innerWidth;
