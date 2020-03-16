@@ -1,8 +1,8 @@
 # for 
 [Unit]
-Description=Daemon to start Shadowsocks server
+Description=Daemon to start Shadowsocks-libev server
 Wants=network-online.target
-After=network.target
+After=network.target network-online.target
 
 [Service]
 Type=simple
@@ -10,7 +10,9 @@ User=nobody
 
 ExecStart=/usr/bin/ss-server -c /etc/shadowsocks/ss-server.json
 #ExecStart=/bin/sh -c "/usr/bin/ss-local -c /etc/shadowsocks/shadowsocks.conf  >/dev/null 2>&1 &"
-Restart=always 
+#Restart=always 
+Restart=on-failure
+RestartSec=1m
 
 [Install]
 WantedBy=multi-user.target
