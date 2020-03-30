@@ -10,7 +10,6 @@ User=nobody
 
 ExecStart=/usr/local/bin/ss-local -c /etc/shadowsocks/%i.json
 #ExecStart=/usr/local/bin/ss-local -c /etc/shadowsocks/client.json
-#ExecStart=/bin/sh -c "/usr/bin/ss-local -c /etc/shadowsocks/shadowsocks.conf  >/dev/null 2>&1 &"
 Restart=always 
 
 [Install]

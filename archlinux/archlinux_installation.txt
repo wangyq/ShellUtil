@@ -1,0 +1,674 @@
+﻿
+1) 下载 ISO文件 archlinux-2013.01.04-dual.iso
+    用iso文件启动进入系统，可以选择进入i686/x86_64 环境 安装。
+     选择一个boot。进入archlinux维护环境。
+    
+     i) 设置公私钥并启动sshd，然后远程ssh登录进行后续安装。(确认网线连接好并且能够分配到IP地址)
+     #ifconfig
+     #systemctl start sshd.service (或者     #/etc/rc.d/sshd start )
+    
+     #ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_keyls
+     #ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key
+     #ssh-keygen -t rsa -b 2048 -f /etc/ssh/ssh_host_rsa_key
+    
+     #/etc/rc.d/sshd start
+     #/usr/sbin/sshd -D & (启动sshd然后远程登录进行安装)
+    
+     #passwd  (给root用户设置密码)
+    
+    
+    
+     ii) 用ssh客户端登录系统
+
+2) 硬盘分区及挂载
+  使用cfdisk 或者parted 进行。(推荐 swap分区和/分区)
+#cfdisk
+
+sda1 /boot 512M  (并激活启动)
+sda5 /swap 1024M
+sda6 / 剩余所有(10G左右)
+或者：
+sda1 /boot 512M
+sda5 -> pvcreate -> vgcreate: vg_arch
+#pvcreate /dev/sda5
+#vgcreate -s 16M vg_arch /dev/sda5
+#lvcreate -L 1024M -n lv_swap vg_arch
+#vgdisplay
+#lvcreate -l 417 -n lv_root vg_arch
+
+/dev/vg_arch/lv_swap: 1024M
+/dev/vg_arch/lv_root: 剩余的
+
+//格式分区
+#mkfs -t ext4 /dev/sda1  (或者ext2)
+#mkswap /dev/vg_arch/lv_swap
+#swapon /dev/vg_arch/lv_swap
+#mkfs -t ext4 /dev/vg_arch/lv_root
+  
+     (注意设置其中一个分区为启动分区)
+     #mkfs.ext4 /dev/sda1   (格式分区)
+     #mkfs -t ext4 /dev/sda1
+     #mkswap /dev/sda5  (格式交换分区)
+     #swapon /dev/sda5  (启用交换分区的分页)
+    
+     # lsblk /dev/sda  (查看分区)
+     # fdisk -l /dev/sda
+    
+     将刚才格式好的根分区挂载到/mnt, 其它分区依次挂载到 /mnt/home, /mnt/var, /mnt/opt等。
+     #mount /dev/sda6 /mnt
+     #mkdir /mnt/boot
+     #mount /dev/sda1 /mnt/boot
+     ...
+     #df  (查看分区挂载是否正确)
+    
+        #mount /dev/vg_arch/lv_root /mnt
+        #mkdir /mnt/boot
+        #mount /dev/sda1 /mnt/boot
+        #df  或者 lsblk
+
+3)      设置镜像地址 并刷新软件包地址
+    #nano /etc/pacman.d/mirrorlist
+
+	
+
+Server = http://mirrors.aliyun.com/archlinux/$repo/os/$arch
+Server = http://mirrors.163.com/archlinux/$repo/os/$arch
+Server = http://mirror.bit.edu.cn/archlinux/$repo/os/$arch
+Server = http://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch
+Server = http://mirror.bjtu.edu.cn/archlinux/$repo/os/$arch
+Server = http://mirror.bit.edu.cn/archlinux/$repo/os/$arch
+Server = http://mirrors.sohu.com/archlinux/$repo/os/$arch
+Server = http://mirrors.ustc.edu.cn/archlinux/$repo/os/$arch
+
+Server = http://mirror.bjtu.edu.cn/archlinux/$repo/os/$arch
+Server = http://mirrors.ustc.edu.cn/archlinux/$repo/os/$arch
+Server = http://mirror.bit.edu.cn/archlinux/$repo/os/$arch
+Server = http://mirrors.sohu.com/archlinux/$repo/os/$arch
+Server = http://mirrors.163.com/archlinux/$repo/os/$arch
+Server = http://mirror.lupaworld.com/archlinux/$repo/os/$arch
+Server = http://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch
+
+    #nano /etc/pacman.conf里去掉前面的#，也就是把整行改成以下的样子，这样pacman下载包就比较快了
+         XferCommand = /usr/bin/wget –passive-ftp -c -O %o %u
+    
+    # timedatectl set-time "2012-10-30 18:17:16" (设置当前时间)
+     # timedatectl set-local-rtc 1  (设置为本地时间)
+     # timedatectl set-local-rtc 0  (设置为UTC时间)
+     $ timedatectl status | grep local
+     $ timedatectl list-timezones
+     # timedatectl set-timezone <Zone>/<SubZone>
+
+     # timedatectl set-timezone Asia/Shanghai(Asia/Chongqing  )
+      #date  (查看当前时间)
+    
+4) 安装基本系统
+    0) 基本系统
+          # pacstrap /mnt base base-devel    (在/mnt目录下面安装系统)
+		  # pacstrap /mnt base base-devel linux linux-firmware (Longterm 4.19)
+		  # pacstrap /mnt base base-devel linux-lts  (Longterm)
+		  (安装 linux-lts  和 linux-lts-headers 这两个包，直接pacman即可)
+         
+          # pacstrap /mnt initscripts  (生成自动脚本,/etc/rc.local)
+    
+     1) 生成fstab:
+     # genfstab -U -p /mnt >> /mnt/etc/fstab
+     # cat /mnt/etc/fstab
+    
+     # nano /mnt/etc/fstab  (添加交换分区)
+         /dev/sda2 none swap defaults 0 0
+    
+     以文件作为交换分区:
+     # fallocate -l 512M /swapfile (或者: # dd if=/dev/zero of=/swapfile bs=1M count=512)
+     # chmod 600 /swapfile
+     # mkswap /swapfile
+     # swapon /swapfile
+     #nano /etc/fstab
+          /swapfile none swap defaults 0 0
+    
+5) 配置系统
+    0) chroot 到系统ls
+        #arch-chroot /mnt
+        #pacman -S vim openssh lrzsz net-tools dnsutils sudo  bash-completion wget ctags  p7zip  (安装常用软件)
+
+     1) 修改主机名, 时区,本地化支持
+         # echo ArchLinux > /etc/hostname  (主机名)
+          #ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+         
+          #nano /etc/locale.gen
+en_US.UTF-8 UTF-8
+zh_CN.GB18030 GB18030
+zh_CN.GBK GBK
+zh_CN.UTF-8 UTF-8
+zh_CN GB2312
+          #locale-gen   (生成本地化文件)
+         
+        #nano /etc/locale.conf (本地化配置)
+LANG=zh_CN.UTF-8
+LC_TIME=zh_CN.UTF-8
+     
+2) 创建初始 ramdisk 环境，文件负责微调初始内存文件系统 initramfs
+            - 修改参数:　(启用lvm才需要)
+          #vim  /etc/mkinitcpio.conf
+MODULES="dm_mod vmw_balloon vmw_pvscsi vmw_vmci vmwgfx vmxnet3 vsock vmw_vsock_vmci_transport ..."
+               
+
+HOOKS="base udev ... lvm2 filesystems"
+
+         # mkinitcpio  //-p linux  -p linux-lts
+
+(如果是Esxi中的虚拟机，可以添加如下模块：)
+MODULES="dm_mod vmw_balloon vmw_pvscsi vmw_vmci vmwgfx vmxnet3 vsock vmw_vsock_vmci_transport ..."
+之后需要安装: open-vm-tools， 然后设置启动： sudo systemctl enable vmtoolsd)
+
+     3) 安装grub启动器
+         i) BIOS启动
+              # pacman -S grub (启动管理器)
+                   (UEFI用户：pacman -S grub-efi-i386/grub-efi-x86_64)
+               # grub-install --target=i386-pc --recheck /dev/sda  (安装启动分区到硬盘)
+                   (或者: grub-install /dev/sda)
+              
+               # pacman -S os-prober
+                   #vim /etc/default/grub   (修改默认启动时间)
+               # grub-mkconfig -o /boot/grub/grub.cfg (更新grub信息)
+
+     4) 设置root密码及创建用户
+         # passwd  (设置root及密码)
+          # useradd   -m  user  /adduser (交换方式创建用户)
+            (#mkdir /home/用户名, chown xxx:xxx /home/用户名, chmod 0700 /home/用户名)
+          # passwd 用户名 (修改用户密码), 然后sudo设置
+		  
+		  # groupadd -r sudo
+		  # usermod -a -G sudo user
+		  # visudo
+		  
+## Uncomment to allow members of group sudo to execute any command
+# %sudo ALL=(ALL) ALL
+%sudo   ALL=(ALL) ALL
+
+      5) 安装常用软件及设置：
+        #pacman -S vim openssh lrzsz net-tools sudo  bash-completion wget ctags  p7zip
+      - 开启sshd服务： systemctl enable sshd (sshd 自启动)
+      - 开启dhcpcd服务:  systemctl enable dhcpcd
+      - 或者netctl网络服务: 
+        * cp /etc/netctl/examaple/ethenet-dhcp /etc/netctl/inner-net  (修改网卡名称为ens32/ens34,...
+         * netctl enable inner-net
+        - sudo 设置
+          # visudo  (编辑/etc/sudoers文件)
+              User_Alias      ADMINS = user
+               Defaults secure_path="/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/sbin:/usr/local/bin"
+               ADMINS ALL=(ALL) ALL
+         - vim语法高亮:
+          # nano /etc/vimrc
+filetype plugin on
+syntax on
+"set number
+
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+"set noexpandtab / expandtab
+set expandtab
+set pastetoggle=<F11>
+
+"follow show tab in another char
+set list
+set listchars=tab:▸\ ,eol:¬
+
+              
+         - ls命令显示彩色:
+          # nano /etc/bash.bashrc (添加下面内容)
+alias sudo='sudo '
+alias ls='ls --color=auto'
+alias ll='ls -l --color=auto'
+alias la='ls -la --color=auto'
+
+            - man命令语法高亮：
+            #nano /etc/bash.bashrc
+man() {
+    env LESS_TERMCAP_mb=$(printf "\e[1;31m") \
+        LESS_TERMCAP_md=$(printf "\e[1;31m") \
+        LESS_TERMCAP_me=$(printf "\e[0m") \
+        LESS_TERMCAP_se=$(printf "\e[0m") \
+        LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
+        LESS_TERMCAP_ue=$(printf "\e[0m") \
+        LESS_TERMCAP_us=$(printf "\e[1;32m") \
+        man "$@"
+}
+           nano语法高亮：
+            #vim /etc/nanorc
+
+        -防火墙配置:
+        #vim /etc/iptables/iptables.rules
+        #systemctl enable iptables
+*filter
+:INPUT DROP [0:0]
+:FORWARD DROP [0:0]
+:OUTPUT ACCEPT [0:0]
+-A INPUT -p icmp -j ACCEPT
+-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT
+#-A INPUT -p tcp -m state --state NEW -m tcp --dport 5900:5906 -j ACCEPT
+-A INPUT -p tcp -j REJECT --reject-with tcp-reset
+-A INPUT -p udp -j REJECT --reject-with icmp-port-unreachable
+-A INPUT -j REJECT --reject-with icmp-proto-unreachable
+COMMIT
+
+     6) 卸载分区并重启系统
+         # exit  (退出chroot)
+          # umount /mnt (/home,/var,等)
+          # reboot
+         
+
+7) 系统运行与配置
+          yaourt 安装
+          # nano /etc/pacman.conf (加入下面)
+              [archlinuxfr]
+               Server = http://repo.archlinux.fr/$arch (或者: i686/x86_64)
+          # pacman -Sy
+          # pacman -S yaourt
+
+          设置服务自启动:
+          # sudo systemctl enable sshd
+          # ln -sf /lib/systemd/system/<service_name> /etc/systemd/system/<service_name>  (手动添加自动启动服务)
+
+        网卡命名:
+        #sudo ln -s /dev/null /etc/udev/rules.d/80-net-name-slot.rules
+        #sudo ln -s /dev/null /etc/udev/rules.d/80-net-setup-link.rules
+
+        或者：
+        #sudo vim /etc/udev/rules.d/10-network.rules
+SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="00:0c:29:ea:de:f7", NAME="eth0"
+         
+     重命名reboot:
+        #sudo unlink /usr/bin/reboot
+        #sudo ln -s /usr/bin/reboot.sh /usr/bin/reboot
+        #sudo vim /usr/bin/reboot.sh
+#!/bin/sh
+systemctl reboot
+
+设置静态IP地址：
+        #sudo vim /etc/systemd/system/network.service 
+        #sudo systemctl enable network
+[Unit]
+Description=Ethnet Static IP Connectivity
+Wants=network.target
+Before=network.target
+BindsTo=sys-subsystem-net-devices-eth1.device
+After=sys-subsystem-net-devices-eth1.device
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/sbin/ip link set dev eth1 up
+ExecStart=/sbin/ip addr flush dev eth1
+ExecStart=/sbin/ip addr add 192.168.1.1/24 dev eth1 
+#ExecStart=/sbin/ip route add default via 192.168.0.1
+
+ExecStop=/sbin/ip addr flush dev eth1 
+ExecStop=/sbin/ip link set dev eth1 down
+
+[Install]
+WantedBy=multi-user.target
+     
+
+    1) 安装x-window
+         # pacman -S xorg-server xorg-server-utils xorg-xinit  
+          # pacman -S mesa  (3D支持)
+          $ lspci | grep VGA (查看显卡驱动)
+          $ pacman -Ss xf86-video | less (开源显卡驱动)
+         
+          # pacman -S xf86-video-vesa (安装vesa显卡驱动)
+             # sudo pacman -S xf86-video-vmware (vmware虚拟机显卡驱动)
+         
+            鼠标驱动：
+#sudo  pacman -Ss xf86-input | less
+#sudo pacman -S xf86-input-vmmouse
+
+          # pacman -S xorg-twm xorg-xclock xterm  (简单的X窗口管理器 twm)
+          # rm ~/.xinitrc
+          # startx  (测试是否成功, 能看到窗口，鼠标能移动)
+          # exit (或者pkill X 或者 reboot)
+    
+     2) 安装字体
+          # pacman -S ttf-dejavu (英文字体)
+          # pacman -S wqy-zenhei  (文泉驿正黑矢量字体)
+          # pacman  -S wqy-microhei
+          # pacman -S wqy-microhei wqy-bitmapfont wqy-zenhei ttf-arphic-uming ttf-arphic-ukai ttf-bitstream-vera
+         
+    
+    
+     3) 安装图形界面GUI
+         # pacman -S dbus gdm  (需要dbus和gdm支持)
+         # pacman -S gnome gnome-extra gnome-shell(选择之一kde/gnome/xfce4/lxde)
+          # pacman -S gnome-tweak-tool  (gnome界面调整工具)
+          # nano ~/.xinitrc
+              exec gnome-session  (或者: startlxde startkde startxfce4)
+          #startx
+          (如果不能正确启动桌面或者vnc中不能启动桌面, 修改文件"/etc/X11/xinit/xinitrc"倒数第5行左右的内容"twm &" 为"gnome-session &")
+         
+          设置startx时启动的桌面环境
+               # echo "startlxde" >> /etc/X11/xinit/xinitrc
+                    startlxde的替换：
+                    kde： startkde
+                    gnome：gnome-session
+                    xfce4：startxfce4
+
+     4) 安装输入法
+         # pacman -S ibus ibus-pinyin
+          # vim ~/.bashrc  (在!最开头!加入下面内容)
+               export GTK_IM_MODULE=ibus
+               export XMODIFIERS=@im=ibus
+               export QT_IM_MODULE=ibus
+               ibus-daemon -d -x
+
+          或者 # pacman -S fcitx
+         
+     5) 浏览器等
+         # pacman -S firefox firefox-i18n flashplugin
+         
+      6) 防火墙：
+          # sudo touch /etc/iptables/iptables.rules (ip6tables.rules)
+          #sudo systemctl start/stop iptables/ip6tables
+
+7. 安装之后
+    1) 清理pacman的临时文件
+         # pacman -Scc
+    2) 更新软件数据库信息：(如果不能pacman安装软件的话)
+        #sudo pacman -Syy
+
+============     附录  ============
+1) 添加rc.local
+    #sudo vim /usr/lib/systemd/system/rc-local.service 或者 /etc/systemd/system/rc-local.service
+    #sudo vim /etc/rc.local
+     #sudo chmod a+x   /etc/rc.local
+     #sudo systemctl enable rc-local.service
+
+内容如下：
+==rc.local==
+#!/bin/sh
+CMD=$1
+if [ -z "$CMD" ]; then
+        CMD=start
+fi
+#sleep 5s
+
+if [ "$CMD" = "start" ]; then 
+        echo "rc.local : $CMD"
+elif [ "$CMD" = "stop" ] ; then
+        echo "rc.local : $CMD"
+fi
+
+exit 0
+
+==rc-local.service==
+#
+# please locate it to "/etc/systemd/system"
+# and then "systemctl enable/start rc-local.service"
+
+[Unit]
+Description=/etc/rc.local compatibility
+ConditionPathExists=/etc/rc.local
+
+# add your dependency of service
+#Requires=netctl@inner.service
+
+After=syslog.target  network.target network-online.target
+
+[Service]
+#Type=forking
+Type=oneshot
+
+#script to run, here add one parameter of 'start'
+ExecStart=/etc/rc.local start
+#ExecStop=/etc/rc.local stop
+
+# disable timeout logic
+TimeoutSec=0
+StandardOutput=tty
+RemainAfterExit=yes
+
+# not supprted now
+SysVStartPriority=99
+
+[Install]
+WantedBy=multi-user.target
+
+
+注意： i) /etc/rc.local开头必须为" #!/bin/sh";  文件设置为可执行
+ii) 在文件/etc/rc.local里面的命令必须一次执行完毕，不能是无法结束的命令, 否则无法开机。如果是无法执行完毕，则加入 "&"作为后台执行即可并且设置为nohup后台执行.
+iii) nohup的写法: "nohup 命令 > /dev/null 2>&1 &"
+iv) 如果rc.local 执行失败, 那么一定是执行的时间太靠前而失败。适当调整执行时间到后面即可。
+      
+
+2) 开机报 "end_request: I/O error, dev fd0, sector 0" 错误解决
+(开机进入BIOS，禁用软驱即可)
+# lsmod | grep -i floppy
+
+Output should be :
+floppy 95465 0
+
+Now remove the module :
+# modprobe -r floppy
+或者在 /etc/modprobe.d/nofloppy.conf 添加模块黑名单:
+# Do not load floppy module
+#
+blacklist floppy
+
+解决办法是将 /dev/fd0文件和 /dev/floppy文件删掉就好了。
+
+3) 防火墙配置 - 单机版
+   - 建立用户自定义琏：TCP/UDP
+    #sudo iptables -N TCP
+    #sduo iptables -N UDP
+
+   - FORWARD chain 禁用
+     #sudo iptables -P FORWARD DROP
+    - OUTPUT chain 启用并且不做任何处理
+        #sudo iptables -P OUTPUT ACCEPT
+    - INPUT chain 根据情况特殊处理
+        #sudo iptables -P INPUT DROP     //默认丢弃
+        #sudo iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT //ICMP 报文接收
+        #sudo iptables -A INPUT -i lo -j ACCEPT  //环回接口接收
+     # iptables -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT   //开启SSH端口
+   #sudo iptables -A INPUT -m conntrack --ctstate INVALID -j DROP  //异常报文丢弃
+   #sudo iptables -A INPUT -p icmp --icmp-type 8 -m conntrack --ctstate NEW -j ACCEPT //ping 报文接收
+   
+   # iptables -A INPUT -p udp -j REJECT --reject-with icmp-port-unreachable
+   # iptables -A INPUT -p tcp -j REJECT --reject-with tcp-rst
+   # iptables -A INPUT -j REJECT --reject-with icmp-proto-unreachable
+# sudo iptables-save > /etc/iptables/iptables.rules  //保存配置
+==================================
+netctl 配置：
+1)命令： #sudo netctl enable school-net
+
+2)文件 /etc/nectl/school-net:
+
+#for ens34
+Description='A basic dhcp ethernet connection'
+Interface=ens34
+Connection=ethernet
+IP=dhcp
+Gateway= # don't set a gateway automatically, use only routes-array
+Routes=("10.0.0.0/8 via 10.108.100.1")
+#Routes=("10.0.0.0/8 via 10.108.100.1") # leave routes empty if you don't want any gateway here
+#Routes=("default metric 300 via 10.108.100.1") # leave routes empty if you don't want any gateway here
+## for DHCPv6
+#IP6=dhcp
+## for IPv6 autoconfiguration
+#IP6=stateless
+#
+#IPCustom=('route add 10.0.0.0/8 via 10.108.100.1' 'route del default via 10.108.100.1')
+IPCustom=( 'route del default via 10.108.100.1')
+
+
+============ArchLinux===============   
+   例子如下：
+# Generated by iptables-save v1.4.19.1 on Sat Jun  8 09:15:35 2013
+*nat
+:PREROUTING ACCEPT [106:10164]
+:INPUT ACCEPT [1:84]
+:OUTPUT ACCEPT [6:288]
+:POSTROUTING ACCEPT [6:288]
+-A POSTROUTING -s 192.168.0.0/24 -o eth0 -j MASQUERADE
+COMMIT
+# Completed on Sat Jun  8 09:15:35 2013
+# Generated by iptables-save v1.4.19.1 on Sat Jun  8 09:15:35 2013
+*filter
+:INPUT DROP [0:0]
+:FORWARD DROP [0:0]
+:OUTPUT ACCEPT [134:14192]
+#Just for logging
+#-A INPUT -i eth1 -m limit --limit 10/sec -j LOG --log-prefix "IPTables: "
+-A INPUT -p icmp -j ACCEPT
+-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+-A INPUT -s 192.168.0.0/16 -i eth0 -j DROP
+-A INPUT -s 192.168.0.0/24 -i eth1 -j ACCEPT
+-A INPUT -s 192.168.0.0/24 -i ppp+ -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
+-A INPUT -p udp -m udp --dport 67 -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 53 -j ACCEPT
+-A INPUT -p udp -m udp --dport 53 -j ACCEPT
+-A INPUT -p udp -m udp --dport 123 -j ACCEPT
+-A INPUT -i eth0 -p tcp -m tcp --dport 1723 -j ACCEPT
+-A INPUT -i eth0 -p gre -j ACCEPT
+-A INPUT -p tcp -j REJECT --reject-with tcp-reset
+-A INPUT -p udp -j REJECT --reject-with icmp-port-unreachable
+-A INPUT -j REJECT --reject-with icmp-proto-unreachable
+-A FORWARD -s 10.0.0.0/8 -i ppp+ -j DROP
+-A FORWARD -d 192.168.0.0/24 -j ACCEPT
+-A FORWARD -s 192.168.0.0/24 -j ACCEPT
+
+COMMIT
+# Completed on Sat Jun  8 09:15:35 2013
+
+======  CentOS  =====
+# Generated by iptables-save v1.4.7 on Fri May 24 11:39:06 2013
+*nat
+:PREROUTING ACCEPT [3087:357108]
+:POSTROUTING ACCEPT [4:336]
+:OUTPUT ACCEPT [4:336]
+-A POSTROUTING -s 192.168.0.0/24 -o eth0 -j MASQUERADE 
+-A POSTROUTING -s 192.168.1.0/24 -o eth0 -j MASQUERADE 
+COMMIT
+# Completed on Fri May 24 11:39:06 2013
+# Generated by iptables-save v1.4.7 on Fri May 24 11:39:06 2013
+*filter
+:INPUT DROP [0:0]
+:FORWARD DROP [0:0]
+:OUTPUT ACCEPT [29:2732]
+:LOGGING - [0:0]
+-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT 
+-A INPUT -i lo -j ACCEPT 
+-A INPUT -p icmp -m icmp --icmp-type 8 -m conntrack --ctstate NEW -j ACCEPT 
+-A INPUT -s 192.168.0.0/16 -i eth0 -j DROP 
+-A INPUT -s 192.168.0.0/24 -i eth1 -j ACCEPT 
+-A INPUT -p tcp -m tcp --dport 22 -j ACCEPT 
+-A INPUT -p tcp -m tcp --dport 53 -j ACCEPT 
+-A INPUT -p udp -m udp --dport 53 -j ACCEPT 
+-A INPUT -i eth0 -p tcp -m tcp --dport 1723 -j ACCEPT 
+-A INPUT -i eth0 -p gre -j ACCEPT 
+-A INPUT -p udp -j REJECT --reject-with icmp-port-unreachable 
+-A INPUT -p tcp -j REJECT --reject-with tcp-reset 
+-A INPUT -j REJECT --reject-with icmp-proto-unreachable 
+-A FORWARD -s 10.0.0.0/8 -i ppp+ -j DROP 
+-A FORWARD -s 192.168.0.0/16 -i eth1 -o eth0 -j ACCEPT 
+-A FORWARD -s 192.168.0.0/16 -i ppp+ -o eth0 -j ACCEPT 
+-A FORWARD -d 192.168.0.0/16 -i eth0 -o eth1 -j ACCEPT 
+-A FORWARD -d 192.168.0.0/16 -i eth0 -o ppp+ -j ACCEPT 
+#-A FORWARD -j LOGGING 
+#-A LOGGING -m limit --limit 2/min -j LOG --log-prefix "IPTables-Dropped: " 
+#-A LOGGING -j DROP 
+COMMIT
+=================ArchLinux for Gateway==============
+[r203@ArchLinux ~]$ cat /etc/iptables/iptables.rules
+# Generated by iptables-save v1.4.21 on Wed Oct 29 16:02:26 2014
+*nat
+:PREROUTING ACCEPT [129:18001]
+:INPUT ACCEPT [74:8129]
+:OUTPUT ACCEPT [1:108]
+:POSTROUTING ACCEPT [1:108]
+-A POSTROUTING -s 192.168.0.0/24 -o ens32 -j MASQUERADE
+COMMIT
+# Completed on Wed Oct 29 16:02:26 2014
+# Generated by iptables-save v1.4.21 on Wed Oct 29 16:02:26 2014
+*filter
+:INPUT DROP [48:3492]
+:FORWARD DROP [0:0]   ( :FORWARD ACCEPT [0:0] )  改为ACCEPT, 否则有些应用出问题
+:OUTPUT ACCEPT [20:1920]
+
+-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+-A INPUT -p icmp -m icmp --icmp-type 8 -m conntrack --ctstate NEW -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 22 -j ACCEPT 
+-A INPUT -p udp -m udp --dport 67 -j ACCEPT
+-A INPUT -p udp -m udp --dport 53 -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 53 -j ACCEPT
+-A INPUT -i eth0 -p tcp -m tcp --dport 1723 -j ACCEPT
+-A INPUT -i eth0 -p gre -j ACCEPT
+-A INPUT -s 192.168.0.0/24 -i ens34 -j ACCEPT
+-A INPUT -s 192.168.0.0/16 -i ens32 -j DROP
+-A INPUT -p udp -j REJECT --reject-with icmp-port-unreachable
+-A INPUT -p tcp -j REJECT --reject-with tcp-reset
+-A INPUT -j REJECT --reject-with icmp-proto-unreachable
+-A FORWARD -d 192.168.0.0/24 -i ens32 -o ens34 -j ACCEPT
+-A FORWARD -s 192.168.0.0/24 -i ens34 -j ACCEPT
+-A FORWARD -s 192.168.0.0/16 -i ppp+ -o ens32 -j ACCEPT
+-A FORWARD -d 192.168.0.0/16 -i ens32 -o ppp+ -j ACCEPT
+COMMIT
+# Completed on Wed Oct 29 16:02:26 2014
+
+====  Windows下面硬盘安装教程         ========
+1) 首先下载grub4dos, 解压缩。 将grldr, menu.lst拷贝到C:根目录。
+    修改 C:\boot.ini, 添加如下代码:
+
+C:\grldr="Grub4Dos"
+
+2) 复制archlinux-2013.05.01-dual.iso到C盘根目录。用虚拟光驱工具载入，然后提取出其中的ARCH\BOOT\I686中vmlinuz ，archiso.img放到C盘根目录。
+  修改menu.lst, 添加如下内容：
+
+title  archlinux  install
+root  (hd0,0)
+kernel  /vmlinuz  archisolabel=archiso
+initrd  /archiso.img    
+boot
+
+3) 重启电脑，选择"Grub4Dos".
+  直到出现提示符： （::Mounting  '/dev/disk/by-label/archiso '  to  '/run/archiso/bootmnt'）。30s之后出现Linux的提示符。
+顺序输入如下指令：
+
+#mkdir  /win
+#mount  /dev/sda1  /win                    注：一般情况下，Windows系统的C盘是/dev/sda1
+#modprobe  loop
+#losetup  /dev/loop6  /win/archlinux-2012.12.01-dual.iso
+#ln  -s  /dev/loop6  /dev/disk/by-label/archiso
+#exit
+
+4) 之后继续进行，然后就和光盘的情况一样了。
+
+
+==================================================
+设置代理脚本
+proxy.sh
+
+#!/bin/sh
+
+PROXYSERVER=192.168.10.1
+PROXYPORT=1234
+PROXYPORT5=1080
+
+#export http_proxy=http://10.203.0.1:5187/
+export http_proxy=http://$PROXYSERVER:$PROXYPORT/
+export https_proxy=$http_proxy
+export ftp_proxy=$http_proxy
+export rsync_proxy=$http_proxy
+export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
+
+#socket 5
+export all_proxy="socks5://$PROXYSERVER:1080"
+
+
+
+
+

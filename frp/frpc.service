@@ -3,13 +3,13 @@
 Description=Daemon to start frp server
 
 #
-StartLimitBurst=5
+#StartLimitBurst=5
 
 #restart  service forever if setting its value to 0
-StartLimitIntervalSec=3600
+#StartLimitIntervalSec=3600
 
 #restart your server if the start limit is reached
-StartLimitAction=reboot
+#StartLimitAction=reboot
 
 #Wants=network-online.target
 #After=network.target
