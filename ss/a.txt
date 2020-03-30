@@ -1,0 +1,39 @@
+Feb 27 20:20:01 vultr.guest systemd[1]: Started Daemon to start Shadowsocks server.
+Feb 27 20:50:50 vultr.guest ss-server[23037]: 2020-02-27 20:50:50 ERROR: crypto: AEAD: repeat salt detected
+Feb 27 20:50:50 vultr.guest ss-server[23037]: 2020-02-27 20:50:50 ERROR: failed to handshake with 2400:dd0d:2000:0:107e:546:4236:c79f: authentication error
+Feb 27 20:56:14 vultr.guest ss-server[23037]: 2020-02-27 20:56:14 ERROR: crypto: AEAD: repeat salt detected
+Feb 27 20:56:14 vultr.guest ss-server[23037]: 2020-02-27 20:56:14 ERROR: failed to handshake with 119.39.47.215: authentication error
+Feb 27 21:08:13 vultr.guest ss-server[23037]: 2020-02-27 21:08:13 ERROR: crypto: AEAD: repeat salt detected
+Feb 27 21:08:13 vultr.guest ss-server[23037]: 2020-02-27 21:08:13 ERROR: failed to handshake with 240e:58:2:200:100::9e: authentication error
+Feb 27 21:08:14 vultr.guest ss-server[23037]: 2020-02-27 21:08:14 ERROR: crypto: AEAD: repeat salt detected
+Feb 27 21:08:14 vultr.guest ss-server[23037]: 2020-02-27 21:08:14 ERROR: failed to handshake with 2408:8648:1300:40:7c25:9bc9:35f7:cda9: authentication error
+Feb 27 21:35:11 vultr.guest ss-server[23037]: 2020-02-27 21:35:11 ERROR: crypto: AEAD: repeat salt detected
+Feb 27 21:35:11 vultr.guest ss-server[23037]: 2020-02-27 21:35:11 ERROR: failed to handshake with 2409:8880:3e01:200:100::12: authentication error
+Feb 27 22:19:08 vultr.guest ss-server[23037]: 2020-02-27 22:19:08 ERROR: server recv: Connection reset by peer
+Feb 27 22:52:42 vultr.guest ss-server[23037]: 2020-02-27 22:52:42 ERROR: crypto: AEAD: repeat salt detected
+Feb 27 22:52:42 vultr.guest ss-server[23037]: 2020-02-27 22:52:42 ERROR: failed to handshake with 2408:8000:10fe:200:100::25: authentication error
+Feb 27 22:57:47 vultr.guest ss-server[23037]: 2020-02-27 22:57:47 ERROR: crypto: AEAD: repeat salt detected
+Feb 27 22:57:47 vultr.guest ss-server[23037]: 2020-02-27 22:57:47 ERROR: failed to handshake with 106.45.1.136: authentication error
+Feb 27 23:06:36 vultr.guest ss-server[23037]: 2020-02-27 23:06:36 ERROR: crypto: AEAD: repeat salt detected
+Feb 27 23:06:36 vultr.guest ss-server[23037]: 2020-02-27 23:06:36 ERROR: failed to handshake with 2409:8714:682:10:72c8:d634:7afd:55c3: authentication error
+Feb 27 23:24:20 vultr.guest ss-server[23037]: 2020-02-27 23:24:20 ERROR: crypto: AEAD: repeat salt detected
+Feb 27 23:24:20 vultr.guest ss-server[23037]: 2020-02-27 23:24:20 ERROR: failed to handshake with 2409:8714:682:10:c9f:1739:6367:8d1d: authentication error
+Feb 27 23:27:55 vultr.guest ss-server[23037]: 2020-02-27 23:27:55 ERROR: crypto: AEAD: repeat salt detected
+Feb 27 23:27:55 vultr.guest ss-server[23037]: 2020-02-27 23:27:55 ERROR: failed to handshake with 2001:da8:20b:200:100::aa: authentication error
+Feb 27 23:34:58 vultr.guest ss-server[23037]: 2020-02-27 23:34:58 ERROR: crypto: AEAD: repeat salt detected
+Feb 27 23:34:58 vultr.guest ss-server[23037]: 2020-02-27 23:34:58 ERROR: failed to handshake with 2400:dd0d:2000:0:757d:c2b7:356c:a975: authentication error
+Feb 27 23:38:17 vultr.guest ss-server[23037]: 2020-02-27 23:38:17 ERROR: crypto: AEAD: repeat salt detected
+Feb 27 23:38:17 vultr.guest ss-server[23037]: 2020-02-27 23:38:17 ERROR: failed to handshake with 2409:8880:3e01:200:100::b1: authentication error
+Feb 27 23:41:08 vultr.guest ss-server[23037]: 2020-02-27 23:41:08 ERROR: crypto: AEAD: repeat salt detected
+Feb 27 23:41:08 vultr.guest ss-server[23037]: 2020-02-27 23:41:08 ERROR: failed to handshake with 2001:da8:20b:200:100::88: authentication error
+Feb 28 00:09:22 vultr.guest ss-server[23037]: 2020-02-28 00:09:22 ERROR: crypto: AEAD: repeat salt detected
+Feb 28 00:09:22 vultr.guest ss-server[23037]: 2020-02-28 00:09:22 ERROR: failed to handshake with 2409:8714:682:10:3f0a:4956:4112:6229: authentication error
+Feb 28 00:09:23 vultr.guest ss-server[23037]: 2020-02-28 00:09:23 ERROR: crypto: AEAD: repeat salt detected
+Feb 28 00:09:23 vultr.guest ss-server[23037]: 2020-02-28 00:09:23 ERROR: failed to handshake with 240e:58:2:200:100::24: authentication error
+Feb 28 08:22:45 vultr.guest ss-server[4123]: 2020-02-28 08:22:45 ERROR: failed to handshake with 2408:8000:10fe:200:100::77: authentication error
+Feb 28 08:46:15 vultr.guest ss-server[4123]: 2020-02-28 08:46:15 ERROR: crypto: AEAD: repeat salt detected
+Feb 28 08:46:15 vultr.guest ss-server[4123]: 2020-02-28 08:46:15 ERROR: failed to handshake with 240:58:2:52: authentication error
+Feb 28 09:04:52 vultr.guest ss-server[4123]: 2020-02-28 09:04:52 ERROR: crypto: AEAD: repeat salt detected
+Feb 28 09:04:52 vultr.guest ss-server[4123]: 2020-02-28 09:04:52 ERROR: failed to handshake with 2400:dd25:10:20:1: authentication error
+Feb 28 09:05:02 vultr.guest ss-server[4123]: 2020-02-28 09:05:02 ERROR: crypto: AEAD: repeat salt detected
+Feb 28 09:05:02 vultr.guest ss-server[4123]: 2020-02-28 09:05:02 ERROR: failed to handshake with 2400:10:20::1: authentication error

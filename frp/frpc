@@ -1,0 +1,40 @@
+#!/bin/sh /etc/rc.common
+# Copyright (c) 2011-2016 OpenWrt.org
+
+START=99
+
+PIDFILE=/tmp/frpc.pid
+
+getpid(){
+	echo `pidof frpc`
+}
+
+start(){
+	if [ ! -f "$PIDFILE" ]; then
+		/usr/bin/frpc -c /etc/frpc.ini >/dev/null 2>&1 &
+		pid=`pidof frpc`
+		echo $pid > $PIDFILE
+		echo "Frpc has started."
+	else
+		echo "Frpc has already started."
+	fi
+}
+
+stop(){
+	if [ ! -f "$PIDFILE" ]; then
+		echo "Frpc is not running."
+	else
+		pid=`cat $PIDFILE`
+		kill $pid
+		rm -f $PIDFILE
+		echo "Frpc has stopped."
+	fi
+	rm -f $PIDFILE
+}
+
+restart(){
+	stop
+	sleep 1
+	start
+	echo "Frpc has restarted."
+}
