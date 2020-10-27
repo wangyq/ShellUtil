@@ -1,5 +1,12 @@
 #!/bin/sh
 
+#
+# firewall-cmd --permanent --zone=home --change-interface=eth0
+# firewall-cmd --zone=home --permanent --add-port=5901-5906/tcp
+# firewall-cmd --reload
+
+# firewall-cmd --get-active-zones
+
 #VNC_PATH=/opt/TigerVNC/bin
 #VNC_EXEC=$VNC_PATH/vncserver
 VNC_EXEC=vncserver
