@@ -1,0 +1,18 @@
+
+1) 通过openssl生成私钥
+openssl genrsa -out server.key 1024/2048/4096
+
+2) 根据私钥生成证书申请文件csr
+openssl req -new -key server.key -out server.csr
+这里根据命令行向导来进行信息输入：其中“Common Name(FQDN Name)”处输入域名(IP地址)
+ps.Common Name可以输入：*.yourdomain.com，这种方式生成通配符域名证书
+
+3) 使用私钥对证书申请进行签名从而生成证书
+openssl x509 -req -in server.csr -out server.crt -signkey server.key -days 3650
+这样就生成了有效期为：10年的证书文件，对于自己内网服务使用足够。
+
+其中的server.crt可以用于trojan的客户端和服务端。
+
+
+-config openssl.cnf
+
