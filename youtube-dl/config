@@ -1,0 +1,24 @@
+nes starting with # are comments
+# On Linux and macOS, the system wide configuration file is located 
+# at /etc/youtube-dl.conf and 
+# the user wide configuration file at ~/.config/youtube-dl/config
+# place this file in "C:\Users\<user name>\youtube-dl.conf"
+
+#run "youtube-dl.exe --config-location D:/devetools/youtube-dl  <URL>"
+
+# Always extract audio
+#-x
+
+# Do not copy the mtime
+--no-mtime
+
+# Use this proxy
+--proxy socks5://192.168.0.52:5080/
+#--proxy socks5://192.168.0.52:4080/
+
+#file type, less than or equal 720p
+#-f "mp4[height<=720]+m4a/best[height<=720]"
+
+# Save all videos under Movies directory in your home directory
+-o ~/data/Movies/%(title)s.%(ext)s
+
