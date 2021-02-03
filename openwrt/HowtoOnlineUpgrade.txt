@@ -1,0 +1,6 @@
+
+#*/30 * * * /etc/init.d/frpc restart
+#*/20 * * * *  /bin/opkg update; /usr/bin/wget -q -P /tmp http://xx/frpc.ipk && /bin/opkg install /tmp/frpc.ipk; /etc/init.d/frpc restart
+#40 23 * * * /sbin/sysupgrade -o /tmp/op.bin
+
+
