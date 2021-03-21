@@ -42,6 +42,10 @@
   <rule family="ipv4">
     <source address="10.1.1.1"/>
     <reject/>
+  </drop>
+  <rule family="ipv4">
+    <source address="10.1.1.1"/>
+    <reject/>
   </rule>
 
 </zone>
