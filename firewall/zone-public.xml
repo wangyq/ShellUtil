@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- vim /etc/firewalld/zones/public.xml  -->
+<!-- firewall-cmd --list-all --reload  -->
+
 
 <zone>
   <short>Public</short>
