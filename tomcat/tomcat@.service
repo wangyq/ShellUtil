@@ -1,0 +1,50 @@
+#for 
+[Unit]
+Description=Tomcat - instance %i
+After=syslog.target network.target network-online.target
+
+[Service]
+Type=forking
+
+User=tomcat
+Group=tomcat
+
+WorkingDirectory=/home/tomcat/%i
+
+Environment="JAVA_HOME=/opt/jdk/default"
+Environment="JAVA_OPTS=-Djava.security.egd=file:///dev/urandom"
+
+#for service supervision
+PIDFile=/home/tomcat/%i/run/tomcat.pid
+#PIDFile=/var/tomcat/%i/run/tomcat.pid
+
+#Environment="CATALINA_PID=/var/tomcat/%i/run/tomcat.pid"
+Environment="CATALINA_PID=/home/tomcat/%i/run/tomcat.pid"
+Environment="CATALINA_BASE=/home/tomcat/%i"
+Environment="CATALINA_HOME=/opt/tomcat"
+Environment="CATALINA_OPTS=-Xms256M -Xmx1024M -server -XX:+UseParallelGC"
+
+# Specifies the maximum file descriptor number that can be opened by this process
+LimitNOFILE=65535
+
+# Disable timeout logic and wait until process is stopped
+# TimeoutStopSec=0
+
+# SIGTERM signal is used to stop the Java process
+# KillSignal=SIGTERM
+
+# Java process is never killed
+# SendSIGKILL=no
+
+# When a JVM receives a SIGTERM signal it exits with code 143
+# SuccessExitStatus=143
+
+ExecStart=/opt/tomcat/bin/startup.sh
+ExecStop=/opt/tomcat/bin/shutdown.sh
+
+#RestartSec=10
+#Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
