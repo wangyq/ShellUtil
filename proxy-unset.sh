@@ -1,7 +1,8 @@
 #!/bin/sh
 
-HOST=192.168.0.1
-PORT=1080
+HOST=127.0.0.1
+PORT=2080
+METHOD=socks5
 
 unset http_proxy
 unset https_proxy
@@ -10,5 +11,4 @@ unset rsync_proxy
 unset all_proxy
 
 unset no_proxy
-
 
