@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome!</title>
+	<META content="text/html; charset=UTF-8" http-equiv=Content-Type>
+    <style type="text/css">
+        div#container {
+			position: absolute;
+			z-index: 99;
+			top: 10%;
+			margin-top: 0 auto;
+
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+			font-size: 16pt;
+			
+			text-shadow: 1px 1px 0px #0000FF,2px 2px 0px #0000FF,-1px -1px 0px #E31B4E,-2px -2px 0px #E31B4E;
+			 
+            color: yellow;
+        }
+
+        div#content {
+            margin-left: auto;
+            margin-right: auto;
+			margin: 0 auto;
+
+            text-align: left;
+			text-shadow: 3px -3px 8px white, 3px 3px 8px black;
+			
+            font-size: 14pt;
+			color: #FF00FF;
+            width: 670px;
+            border: 3px solid #E6E6FA;
+			border-radius: 8px;
+			box-shadow: 4px -4px 10px 5px #88888888;
+            padding: 10px;
+        }
+    </style>
+
+<style type="text/css">
+    body{margin: 0; padding: 0; background-color: black; overflow: hidden;}
+    canvas {
+        position: fixed;
+        top: 0px;
+    }
+</style>
+
+</head>
+ 
+<body>
+	<div id="container">
+        <H1>Welcome!</H1>
+        <div id="content">
+            <P><H3>Good Good Study, Day Day Up! </H3></P>
+        </div>
+    </div>
+
+<canvas id="canvas"></canvas>
+
+<script type="text/javascript">
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+ 
+ 
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+ 
+    var texts = '0123456789'.split('');
+ 
+    var fontSize = 16;
+    var columns = canvas.width/fontSize;
+    // 用于计算输出文字时坐标，所以长度即为列数
+    var drops = [];
+    //初始值
+    for(var x = 0; x < columns; x++){
+        drops[x] = 1;
+    }
+ 
+    function draw(){
+        //让背景逐渐由透明到不透明
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        //文字颜色
+        ctx.fillStyle = '#0F0';
+        ctx.font = fontSize + 'px arial';
+        //逐行输出文字
+        for(var i = 0; i < drops.length; i++){
+            var text = texts[Math.floor(Math.random()*texts.length)];
+            ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+ 
+            if(drops[i]*fontSize > canvas.height || Math.random() > 0.95){
+                drops[i] = 0;
+            }
+ 
+            drops[i]++;
+        }
+    }
+ 
+    setInterval(draw, 80);
+</script>
+</body>
+
